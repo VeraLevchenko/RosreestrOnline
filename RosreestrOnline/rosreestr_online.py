@@ -41,8 +41,8 @@ def getCadNumParcel(type_street, street, house):
 	# print(r.json())
 	cadNumParcel = []
 	for a in r.json():
-		# print("a = ",a)
-		cadnum = a.get("objectId")
+		print("a = ", a)
+		cadnum = a.get("objectCn")
 		_type_street = a.get("street")
 		index = _type_street.find("|")
 		_type_street= _type_street[index + 1:]
@@ -51,6 +51,24 @@ def getCadNumParcel(type_street, street, house):
 			normalizationTypeStreet(type_street) == normalizationTypeStreet(_type_street):
 			cadNumParcel.append(cadnum)
 	return cadNumParcel
+
+def getCadNumBuilding(type_street, street, house):
+	url = 'https://rosreestr.ru/fir_lite_rest/api/gkn/address/' \
+		  'fir_objects?macroRegionId=132000000000&regionId=132431000000&street=' + str(street) + '&house=' + str(house)
+	r = requests.get(url, headers=headers, verify="CertBundle.pem")
+	# print(r.json())
+	cadNumBuilding = []
+	for a in r.json():
+		# print("a = ",a)
+		cadnum = a.get("objectCn")
+		_type_street = a.get("street")
+		index = _type_street.find("|")
+		_type_street = _type_street[index + 1:]
+		if a.get("objectType") == "building" and\
+			getRemoved(cadnum) == 0 and\
+			normalizationTypeStreet(type_street) == normalizationTypeStreet(_type_street):
+			cadNumBuilding.append(cadnum)
+	return cadNumBuilding
 
 
 # функция возвращает список кадастровых номеров земельных участков по адресу,
@@ -61,10 +79,20 @@ def getFullCadNumParcel(type_street, street, house):
 	if "-" in house:
 		houses.append(str(house.replace("-", '')))
 	for house in houses:
-		cadNumParcel = getCadNumParcel(type_street, street, house)
-		cadNumParcels = cadNumParcels + cadNumParcel
+		cadNumParcel1 = getCadNumParcel(type_street, street, house)
+		cadNumParcels = cadNumParcels + cadNumParcel1
 	return cadNumParcels
 
+def getFullCadNumBuilding(type_street, street, house):
+	houses = [house]
+	cadNumBuilding = []
+	if "-" in house:
+		houses.append(str(house.replace("-", '')))
+	for house in houses:
+		cadNumBuilding1 = getCadNumBuilding(type_street, street, house)
+		cadNumBuilding = cadNumBuilding + cadNumBuilding1
+	return cadNumBuilding
 
 if __name__ == "__main__":
-	getFullCadNumParcel("улица", "Сибирская", "45")
+	print(getFullCadNumParcel("улица", "Сибирская", "45"))
+	# getFullCadNumBuilding("улица", "Учительская", "28-А")
