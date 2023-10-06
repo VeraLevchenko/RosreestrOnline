@@ -13,19 +13,19 @@ import rosreestr_online
 
 start = time.time() ## точка отсчета времени
 
-file_name = "результат" + str(random.randint(1, 10000)) + ".xlsx"
+file_name = "output_table" + str(random.randint(1, 10000)) + ".xlsx"
 
-wb = openpyxl.load_workbook('src.xlsx')
+wb = openpyxl.load_workbook('input_table.xlsx')
 sheet = wb.active
 
 table_output = openpyxl.Workbook()
 sheet_table_output = table_output.active
 
 # Создаем заголовки в результирующей таблице
-sheet_table_output.append(('id', 'Тип', 'НаимУлицы', 'Дом', "КадастровыйНомерЗдания"))
+sheet_table_output.append(('id', 'Тип', 'НаимУлицы', 'Дом', "Кадастровые номера всех ОКС"))
 max_row = sheet.max_row
 
-for i in range(2, max_row):
+for i in range(2, max_row + 1):
 	id = sheet[i][0].value
 	type_street = sheet[i][1].value
 	ul = sheet[i][2].value
@@ -49,4 +49,4 @@ for i in range(2, max_row):
 
 end = time.time() - start #  время работы программы
 os.startfile(file_name) # Открываем результирующий файл
-print(end) # вывод времени
+print("Время работы: ", end) # вывод времени

@@ -11,8 +11,9 @@ headers = {"User-Agent": "Mozilla / 5.0 (Windows NT 10.0; WOW64) AppleWebKit/537
 # возвращает тип улицы без точки, в нижнем регистре, в полном формате (напр. "Ул." превратится в "улица")
 def normalizationTypeStreet(type_street):
 	type_ulicas = ["ул", "улица", "у", ]
-	type_proezd = ["проезд", "пр-д", "проспект", "пр-т", "п-кт"]
-	type_pereulok = ["пер", "пер-к", "переулок", "пр-т", "п-кт"]
+	type_proezd = ["проезд", "пр-д", "пр"]
+	type_pereulok = ["пер", "пер-к", "переулок"]
+	type_prospect = ["пр-т", "п-кт", "проспект", "ПР-КТ"]
 
 	type_street = type_street.replace(".", '')
 	type_street = type_street.lower()
@@ -22,6 +23,8 @@ def normalizationTypeStreet(type_street):
 		type_street = "проезд"
 	if type_street in type_pereulok:
 		type_street = "переулок"
+	if type_street in type_prospect:
+		type_street = "проспект"
 	return type_street
 
 
@@ -44,7 +47,7 @@ def getCadNumParcel(type_street, street, house):
 	# print(r.json())
 	cadNumParcel = []
 	for a in r.json():
-		print("a = ", a)
+		# print("a = ", a)
 		cadnum = a.get("objectCn")
 		_type_street = a.get("street")
 		index = _type_street.find("|")
@@ -81,7 +84,7 @@ def getCadNumApartment(type_street, street, house, apartment):
 	cadNumBuilding = []
 	cadnum1 = "None"
 	for a in r.json():
-		print("a = ", a)
+		# print("a = ", a)
 		if a.get("objectCn"):
 			cadnum1 = a.get("objectCn")
 		else:
@@ -92,6 +95,7 @@ def getTypeObject(cadnum):
 	url = 'http://rosreestr.ru/fir_lite_rest/api/gkn/fir_object/' + str(cadnum)
 	r = requests.get(url, headers=headers, verify="CertBundle.pem")
 	a = r.json().get("objectData")
+	print("a = ", a)
 	if a.get("objectName"):
 		objectName = a.get("objectName")
 	else:
@@ -125,5 +129,5 @@ if __name__ == "__main__":
 
 # Другие варианты url:
 
-# https://rosreestr.ru/fir_lite_rest/api/gkn/address/fir_objects?macroRegionId=132000000000&regionId=132431000000&street=Франкфурта&house=8&apartment=1
+# https://rosreestr.ru/fir_lite_rest/api/gkn/address/fir_objects?macroRegionId=132000000000&regionId=132431000000&street=Металлургов&house=8&apartment=1
 # http://rosreestr.ru/api/online/fir_object/42:30:301069:1456
