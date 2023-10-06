@@ -122,7 +122,7 @@ def getFullCadNumBuilding(type_street, street, house):
 
 if __name__ == "__main__":
 	print(getFullCadNumParcel("улица", "Сибирская", "45"))
-	# getFullCadNumBuilding("улица", "Учительская", "28-А")
+
 
 # https://rosreestr.ru/fir_lite_rest/api/gkn/address/fir_objects?macroRegionId=132000000000&regionId=132431000000&street=Франкфурта&house=8&apartment=1
 # http://rosreestr.ru/api/online/fir_object/42:30:301069:1456
