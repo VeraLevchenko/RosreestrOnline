@@ -13,7 +13,7 @@ def normalizationTypeStreet(type_street):
 	type_ulicas = ["ул", "улица", "у", ]
 	type_proezd = ["проезд", "пр-д", "пр"]
 	type_pereulok = ["пер", "пер-к", "переулок"]
-	type_prospect = ["пр-т", "п-кт", "проспект", "ПР-КТ"]
+	type_prospect = ["пр-т", "п-кт", "проспект", "пр-кт"]
 
 	type_street = type_street.replace(".", '')
 	type_street = type_street.lower()
@@ -47,44 +47,36 @@ def getCadNumParcel(type_street, street, house):
 	# print(r.json())
 	cadNumParcel = []
 	for a in r.json():
-		# print("a = ", a)
-		cadnum = a.get("objectCn")
-		_type_street = a.get("street")
-		index = _type_street.find("|")
-		_type_street= _type_street[index + 1:]
-		if a.get("objectType") == "parcel" and\
-			getRemoved(cadnum) == 0 and\
-			normalizationTypeStreet(type_street) == normalizationTypeStreet(_type_street):
-			cadNumParcel.append(cadnum)
+		if a.get("objectType") == "parcel":
+			_type_street = a.get("street")
+			index = _type_street.find("|")
+			_type_street = _type_street[index + 1:]
+			cadnum = a.get("objectCn")
+			if getRemoved(cadnum) == 0 and normalizationTypeStreet(type_street) == normalizationTypeStreet(_type_street):
+				cadNumParcel.append(cadnum)
 	return cadNumParcel
 
 def getCadNumBuilding(type_street, street, house):
 	url = 'https://rosreestr.ru/fir_lite_rest/api/gkn/address/' \
 		  'fir_objects?macroRegionId=132000000000&regionId=132431000000&street=' + str(street) + '&house=' + str(house)
 	r = requests.get(url, headers=headers, verify="CertBundle.pem")
-	# print(r.json())
 	cadNumBuilding = []
 	for a in r.json():
-		# print("a = ",a)
-		cadnum = a.get("objectCn")
-		_type_street = a.get("street")
-		index = _type_street.find("|")
-		_type_street = _type_street[index + 1:]
-		if a.get("objectType") == "building" and\
-			getRemoved(cadnum) == 0 and\
-			normalizationTypeStreet(type_street) == normalizationTypeStreet(_type_street):
-			cadNumBuilding.append(cadnum)
+		if a.get("objectType") == "building":
+			cadnum = a.get("objectCn")
+			_type_street = a.get("street")
+			index = _type_street.find("|")
+			_type_street = _type_street[index + 1:]
+			if getRemoved(cadnum) == 0 and normalizationTypeStreet(type_street) == normalizationTypeStreet(_type_street):
+				cadNumBuilding.append(cadnum)
 	return cadNumBuilding
 
 def getCadNumApartment(type_street, street, house, apartment):
 	url = 'https://rosreestr.ru/fir_lite_rest/api/gkn/address/' \
 		  'fir_objects?macroRegionId=132000000000&regionId=132431000000&street=' + str(street) + '&house=' + str(house) + '&apartment=' + str(apartment)
 	r = requests.get(url, headers=headers, verify="CertBundle.pem")
-	# print(r.json())
-	cadNumBuilding = []
 	cadnum1 = "None"
 	for a in r.json():
-		# print("a = ", a)
 		if a.get("objectCn"):
 			cadnum1 = a.get("objectCn")
 		else:
@@ -95,12 +87,46 @@ def getTypeObject(cadnum):
 	url = 'http://rosreestr.ru/fir_lite_rest/api/gkn/fir_object/' + str(cadnum)
 	r = requests.get(url, headers=headers, verify="CertBundle.pem")
 	a = r.json().get("objectData")
-	print("a = ", a)
 	if a.get("objectName"):
 		objectName = a.get("objectName")
 	else:
 		objectName = 'None'
 	return(objectName)
+
+# функция возвращает ID объекта недвижимости
+def getObjectId(cadnum):
+	# url = 'http://rosreestr.ru/fir_lite_rest/api/gkn/fir_object/' + str(cadnum)
+	url = 'http://rosreestr.gov.ru/api/online/fir_objects/' + str(cadnum)
+	r = requests.get(url, headers=headers, verify="CertBundle.pem")
+	for el in r.json():
+		objectIds = el.get("objectId")
+		if "_" in objectIds:
+			objectId = objectIds
+		else:
+			objectId = "objectId отсутстует"
+	return objectId
+
+# функция возвращает наличие и вид зарегистрированного права
+def getRightReg(objectId):
+	url = 'https://rosreestr.gov.ru/api/online/fir_object/' + str(objectId)
+	print(url)
+	r = requests.get(url, headers=headers, verify="CertBundle.pem")
+	# parcelData = r.json().get("parcelData")
+	Data = r.json()
+	premisesData = Data.get("premisesData")
+	rightsReg = premisesData.get("rightsReg")
+	context = []
+	if rightsReg == True:
+		rightEncumbranceObjects = Data.get("rightEncumbranceObjects")
+		for el in rightEncumbranceObjects:
+			rightData = el.get("rightData")
+			codeDesc = rightData.get("codeDesc")
+			partSize = rightData.get("partSize")
+			context.append(codeDesc)
+			context.append(partSize)
+	else:
+		context = "Право не зарегистрировано"
+	return context
 
 # функция возвращает список кадастровых номеров земельных участков по адресу,
 # перебирая адреса с дефисом и без в номере здания
@@ -131,3 +157,5 @@ if __name__ == "__main__":
 
 # https://rosreestr.ru/fir_lite_rest/api/gkn/address/fir_objects?macroRegionId=132000000000&regionId=132431000000&street=Металлургов&house=8&apartment=1
 # http://rosreestr.ru/api/online/fir_object/42:30:301069:1456
+# http://rosreestr.ru/api/online/fir_objects/142_469806
+
