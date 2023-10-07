@@ -1,0 +1,106 @@
+
+
+http://rosreestr.ru/api/online/fir_object/2:56:30302:639
+http://rosreestr.ru/api/online/fir_object/42:30:0101001:14963
+
+
+
+Узнаем id
+http://rosreestr.gov.ru/fir_rest/api/fir/fir_objects/42:30:0101001:14963   
+
+Не рабочий
+http://rosreestr.gov.ru/fir_rest/api/fir/fir_objects/142_53831006
+
+$cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 "C:\Users\18098\OneDrive\Desktop\Adress_normalization\russian_trusted_root_ca.cer"
+$cert.Thumbprint
+
+  File "C:\Users\18098\AppData\Local\Programs\Python\Python39\lib\http\client.py", line 1258, in putheader
+    values[i] = one_value.encode('latin-1')
+
+certmgr.msc
+
+Сайт про api
+https://ru.stackoverflow.com/questions/636331/%D0%A1%D1%83%D1%89%D0%B5%D1%81%D1%82%D0%B2%D1%83%D0%B5%D1%82-%D0%BB%D0%B8-%D0%A4%D0%93%D0%98%D0%A1-%D0%95%D0%93%D0%A0%D0%9D-api
+
+http://rosreestr.ru/api/online/macro_regions
+{"id":132000000000,"name":"Кемеровская область"}
+
+http://rosreestr.ru/api/online/regions/132000000000
+{"id":132431000000,"name":"Новокузнецк"}
+
+Пример адресного запроса
+http://rosreestr.ru/api/online/address/fir_objects?macroRegionId=140000000000&RegionId=140281000000&street=Полевая&house=1
+
+http://rosreestr.ru/api/online/address/fir_objects?macroRegionId=132000000000&regionId=132431000000&street=Франкфурта&house=9
+
+
+Франкфурта 9
+
+http://rosreestr.ru/api/online/fir_object/42:30:301068:385
+
+Узнаем id
+http://rosreestr.gov.ru/fir_rest/api/fir/fir_objects/42:30:301068:385 
+
+Запрос через id не работают
+
+http://rosreestr.gov.ru/api/online/fir_object/142_11654314000
+http://rosreestr.gov.ru/fir_rest/api/fir/fir_objects/142_11654314000
+
+ЗДание жилого дома
+
+не работает
+http://rosreestr.ru/api/online/fir_object/42:30:0415002:361
+http://rosreestr.ru/api/online/fir_objects/42:30:0415002:361
+
+Узнаем id
+http://rosreestr.gov.ru/fir_rest/api/fir/fir_objects/42:30:0415002:361
+
+не работает
+http://rosreestr.ru/api/online/fir_object/142_1379106
+
+выдает не все
+http://rosreestr.ru/api/online/address/fir_objects?macroRegionId=132000000000&regionId=132431000000&street=Минская&house=42
+
+
+ГКН по адресу
+Выдает все
+https://rosreestr.ru/fir_lite_rest/api/gkn/address/fir_objects?macroRegionId=132000000000&regionId=132431000000&street=Минская&house=42
+
+
+ЕГРП по адресу
+Выдает все!!!!!!!!!!!!!!!!
+http://rosreestr.ru/fir_rest/api/fir/address/fir_objects?macroRegionId=132000000000&regionId=132431000000&street=Минская&house=42
+
+
+сведения ГКН по кад номеру
+http://rosreestr.ru/fir_lite_rest/api/gkn/fir_object/42:30:0415002:361
+
+поиск ГКН по кад номеру
+http://rosreestr.ru/fir_lite_rest/api/gkn/fir_objects/42:30:0415002:361
+
+сведения об объекте из ЕГРП по идентификатору ЕГРП (выдает право)
+http://rosreestr.ru/fir_rest/api/fir/fir_object/142_10000000122745860
+
+4.11 Получение списка квартир многоквартирного дома
+с дополнительной информацией
+http://rosreestr.ru/fir_lite_rest/api/gkn/mkd?42:30:0302016:128
+
+
+http://rosreestr.ru/fir_lite_rest/api/gkn/fir_object/42:30:0101010:104
+
+
+1. Ищем идентификатор. Описание с сайта росреестра
+
+https://rosreestr.gov.ru/api/online/fir_objects/42:30:0302016:242
+
+
+2. Ищем права . Описание с сайта росреестра. поиск по идентификатору:
+
+http://rosreestr.ru/api/online/fir_object/142_469806
+
+приходит ответ - браузер добавил в адрес "gov."
+
+https://rosreestr.gov.ru/api/online/fir_object/142_469806
+
+
+
